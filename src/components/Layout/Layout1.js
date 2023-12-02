@@ -25,11 +25,14 @@ import UserViewPage from "../../pages/UserView/UserView";
 import ClientViewPage from "../../pages/ClientView/index";
 import AddClientPage from "../../pages/ClientView/AddClient";
 import EditClientPage from "../../pages/ClientView/EditClient";
+import ViewClientPage from "../../pages/ClientView/ViewClient";
 import SalesViewPage from "../../pages/SalesView/index";
 import EditSalesPage from "../../pages/SalesView/EditSales";
 import AddSalesPage from "../../pages/SalesView/AddSales";
 import ScheduleReportPage from '../../pages/Report/ScheduleReport/ScheduleReport'
 import ReportViewPage from '../../pages/ReportView/index';
+import CalendarViewPage from "../../pages/ScheduleView/CalendarView";
+import EditUserViewPage from '../../pages/UserView/EditUser';
 import ScheduleViewPage from "../../pages/ScheduleView/index";
 import AddSchedulePage from "../../pages/ScheduleView/AddSchedule";
 // import SalesOrderReportPage from '../../pages/Report/SalesOrderReport/SalesOrderReport'
@@ -64,6 +67,7 @@ import AddProductPage from "../../pages/Visit/Product/Add";
 import DetailVisitingReasonPage from "../../pages/Visit/VisitingReason/Detail";
 import OutcomePage from "../../pages/Outcome";
 import AddOutcomePage from "../../pages/Outcome/Add";
+import AbsentFeatureDetailPage from "../../pages/AbsentFeature";
 
 function Layout(props) {
   var classes = useStyles();
@@ -74,7 +78,7 @@ function Layout(props) {
   var layoutState = useLayoutState();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{backgroundColor:"#F8F8F8"}}>
       <>
         {/* <Header history={props.history} /> */}
         <Sidebar />
@@ -89,7 +93,8 @@ function Layout(props) {
             [classes.padding1600]: matches1600,
             [classes.padding1800]: matches1800,
           }
-          )}>
+          )}
+          style={{backgroundColor:"#F8F8F8"}}>
             <Grid>
               <Switch>
                 
@@ -97,16 +102,19 @@ function Layout(props) {
                 <Route
                   exact
                   path="/app"
-                  render={() => <Redirect to="/app/clientview" />}
+                  render={() => <Redirect to="/app/scheduleview" />}
                 />
                 <Route exact path="/app/scheduleview" component={ScheduleViewPage} />
                 <Route exact path="/app/userview" component={UserViewPage} />
+                <Route exact path="/app/userview/user/:user/edit" component={EditUserViewPage} /> 
                 <Route exact path="/app/clientview/add" component={AddClientPage} />
                 <Route exact path="/app/clientview/:clientview/edit" component={EditClientPage} />
+                <Route exact path="/app/clientview/:clientview/view" component={ViewClientPage} />
                 <Route exact path="/app/salesview" component={SalesViewPage} />
                 <Route exact path="/app/salesview/:salesview/edit" component={EditSalesPage} />
                 <Route exact path="/app/salesview/add" component={AddSalesPage} />
                 <Route exact path="/app/reportview" component={ReportViewPage} />
+                <Route exact path="/app/calendarview" component={CalendarViewPage} />
                 <Route exact path="/app/schedule_report" component={ScheduleReportPage} />
                 <Route exact path="/app/scheduleview/add" component={AddSchedulePage} />
                 <Route exact path="/app/salesorder_report" component={TargetPage} />
@@ -139,6 +147,7 @@ function Layout(props) {
                 <Route exact path="/app/visit/product/add" component={AddProductPage} />
                 <Route exact path="/app/outcome" component={OutcomePage} />
                 <Route exact path="/app/outcome/add" component={AddOutcomePage} />
+                <Route exact path="/app/settings/absent-feature" component={AbsentFeatureDetailPage} />
                 <Route component={Error} />
               </Switch>
             </Grid>

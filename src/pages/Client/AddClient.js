@@ -316,27 +316,33 @@ function AddClient(props) {
                             <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                 <CustomInput req={true} title="Entity Name" value={state.entity_name}
                                     handleChange={(e) => handleChange(e, 'entity_name')} />
+                                &nbsp;&nbsp;
                             </Grid>
                             <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                 <CustomInput title="Custom Field" value={state.custom_field} handleChange={(e) => handleChange(e, 'custom_field')} />
+                                &nbsp;&nbsp;
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>
                             <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                 <CustomInput title="Phone Number" value={state.phone_number} type="number" maxLength={10}
                                     handleChange={(e) => handleChange(e, 'phone_number')} />
+                                &nbsp;&nbsp;
                             </Grid>
                             <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                 <CustomCombobox req={true} name="Company Name" items={companies} value={state.company_entity_name}
                                     handleChange={(e) => handleChange(e, 'company_entity_name')} />
+                                &nbsp;&nbsp;
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>
                             <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                 <CustomInput title="Address" value={state.address} handleChange={(e) => handleChange(e, 'address')} />
+                                &nbsp;&nbsp;
                             </Grid>
                             <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                 <CustomInput title="Location(For example: -123.1231 -23.3452)" value={state.location} handleChange={(e) => handleChange(e, 'location')} />
+                                &nbsp;&nbsp;
                             </Grid>
                         </Grid>
 

@@ -11,6 +11,8 @@ import {
   MenuItem,
   Divider, Button, CircularProgress, Modal
 } from "@material-ui/core";
+import { DatePicker, DateTimePicker } from '@material-ui/pickers';
+import { DatePicker as DatePickerAnt, Typography } from 'antd';
 import MUIDataTable, { debounceSearchRender } from "mui-datatables";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 // styles
@@ -59,8 +61,11 @@ function ScheduleViewPage(props) {
   const [dataSource, setDataSource] = useState([]);
   const scheduleviewData = useSelector(state => state.scheduleview.scheduleview);
   const userviewData = useSelector(state => state.userview.userview);
+  const [dataLength, setDataLength] = useState([]);
 
   const isLoading = useSelector(state => state.scheduleview.loading);
+  const [datePicker, setDatePicker] = useState(Date());
+  const { Text } = Typography;
 
   const [filterList, setFilterList] = useState({
     limit: 10,
@@ -69,7 +74,9 @@ function ScheduleViewPage(props) {
     predicted_time_spent: null,
     reason: null,
     isLate: null,
-    present: null
+    present: null,
+    start_date: null,
+    end_date: null
   })
 
   //Show notification
@@ -109,6 +116,7 @@ function ScheduleViewPage(props) {
     fetch(`${SERVER_URL}getScheduleById`, requestOptions)
         .then(async response => {
             const data = await response.json();
+            console.log('g78', data);
             setSelectedSchedule(data)
         })
         .catch(() => {
@@ -121,6 +129,10 @@ function ScheduleViewPage(props) {
   }, [])
 
   useEffect(() => {
+    console.log('g78length', scheduleviewData?.data?.length);
+    if (scheduleviewData?.data?.length) {
+      setDataLength(scheduleviewData?.data?.length)
+    }
     setDataSource(scheduleviewData?.data);
   }, [scheduleviewData?.data])
   
@@ -128,6 +140,7 @@ function ScheduleViewPage(props) {
     props.fetchScheduleView({
       ...filterList
     });
+    console.log('g78total', scheduleviewData.data?.length);
     setDataSource(scheduleviewData.data);
   }, [filterList]);
 
@@ -187,7 +200,7 @@ function ScheduleViewPage(props) {
   const columns = [
     {
       name: "schedule_id",
-      label: "View",
+      label: <p style={{ textTransform: 'capitalize' }}>View</p>,
       options: {
         filter: false,
         sort: false,
@@ -218,7 +231,7 @@ function ScheduleViewPage(props) {
     },
     {
       name: "full_name",
-      label: "Employee",
+      label: <p style={{ textTransform: 'capitalize' }}>Employee</p>,
       options: {
         filter: true,
         sort: true,
@@ -235,7 +248,7 @@ function ScheduleViewPage(props) {
     },
     {
       name: "client_entity_name",
-      label: "Client",
+      label: <p style={{ textTransform: 'capitalize' }}>Client</p>,
       options: {
         filter: false,
         sort: true,
@@ -243,11 +256,10 @@ function ScheduleViewPage(props) {
     },
     {
       name: "schedule_datetime",
-      label: "Date Created",
+      label: <p style={{ textTransform: 'capitalize' }}>Date Created</p>,
       options: {
         filter: false,
         sort: true,
-        display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           console.log('here21'+value);
           return (
@@ -259,7 +271,7 @@ function ScheduleViewPage(props) {
       },
     },    {
       name: "check_in_datetime",
-      label: "Check In",
+      label: <p style={{ textTransform: 'capitalize' }}>Checkin</p>,
       options: {
         filter: false,
         sort: true,
@@ -274,7 +286,7 @@ function ScheduleViewPage(props) {
     },
     {
       name: "check_out_datetime",
-      label: "Check Out",
+      label: <p style={{ textTransform: 'capitalize' }}>Checkout</p>,
       options: {
         filter: false,
         sort: true,
@@ -310,7 +322,7 @@ function ScheduleViewPage(props) {
     */
     {
       name: "check_in_datetime",
-      label: "Present",
+      label: <p style={{ textTransform: 'capitalize' }}>Present</p>,
       options: {
         filter: true,
         sort: true,
@@ -345,17 +357,17 @@ function ScheduleViewPage(props) {
     print: false,
     download: true,
     downloadOptions: {
-      filename: 'schedule_data'
+      filename: 'schedule_data.xlsx'
     },
-    filter: true,
+    filter: false,
     responsive: "scroll",
     fixedHeader: false, elevation: 0,
     rowsPerPageOptions: [5, 10, 20],
     responsive: "scrollFullHeight",
     resizableColumns: false,
-    selectableRows: false,
+    selectableRows: 'multiple',
     serverSide: true,
-    count: scheduleviewData.total,
+    count:  scheduleviewData.total,
     customSearchRender: debounceSearchRender(500),
     onTableChange: (action, tableState) => {
       console.log(action, tableState, "table change")
@@ -375,6 +387,42 @@ function ScheduleViewPage(props) {
         default:
           console.log('action not handled.');
       }
+    },
+    onRowsDelete: (rowsDeleted) => {
+
+      const delete_id = []
+      rowsDeleted.data.map((data) => {
+        const newDeleteId = scheduleviewData.data[data.dataIndex]
+        console.log('g789', newDeleteId)
+        delete_id.push(newDeleteId.schedule_id)
+      })
+
+      delete_id.map((id) => {
+        // row delete api call
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            schedule_id: id
+          })
+        };
+        fetch(`${SERVER_URL}deleteSchedule`, requestOptions)
+          .then(async response => {
+            const data = await response.json();
+            console.log("Response Data=============>", data)
+            // check for error response
+            if (!response.ok) {
+              // get error message from body or default to response status
+              const error = (data && data.message) || response.status;
+              return Promise.reject(error);
+            }
+            return
+          })
+          .catch(error => {
+            notify('Something went wrong!\n' + error)
+            console.error('There was an error!', error);
+          });
+      })
     },
     onFilterChange: (column, list, type) => {
       if(column === 'full_name'){
@@ -487,6 +535,39 @@ function ScheduleViewPage(props) {
     }
   };
 
+  const handleChange = (e, field) => {
+
+    let start_date;
+    let end_date;
+    if (e !== null) {
+      const date = new Date(e);
+
+      setDatePicker(date);
+      // create a new Date object with the same date as the given date object, but with time set to 00:00:00
+      const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 1);
+
+      // create a new Date object with the same date as the given date object, but with time set to 23:59:59
+      const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+
+      start_date = startOfDay ? moment(startOfDay).format("YYYY-MM-DD HH:mm") : null
+      end_date = endOfDay ? moment(endOfDay).format("YYYY-MM-DD HH:mm") : null
+    } else {
+      start_date= new Date(null);
+      end_date = new Date() + 1;
+    }
+
+    setFilterList({
+      ...filterList,
+      offset: 0,
+      user_id: null,
+      predicted_time_spent: null,
+      reason: null,
+      isLate: null,
+      present: null,
+      start_date: start_date,
+      end_date: end_date
+    })
+  }
 
   return (
     <>
@@ -506,6 +587,12 @@ function ScheduleViewPage(props) {
         </Grid>
         <Grid item xs={6} md={3} className={classes.formContainer}>
           <CustomInput title="Client Name" placeholder="Search Client Name" handleChange={(e) => { e.persist(); handleSearchClient(e) }}/>
+        </Grid>
+        <Grid item xs={6} md={3} className={classes.formContainer}>
+          <div style={{display: "flex", flexDirection: "column"}}>
+            <Text>Select Date</Text>
+            <DatePickerAnt onChange={(e) => handleChange(e, 'date')} />
+          </div>
         </Grid>
           <Grid item xs={12} md={12}>
             <MuiThemeProvider theme={getMuiTheme()}>

@@ -3,6 +3,8 @@ import { Grid, IconButton, Button, Switch, CircularProgress } from "@material-ui
 import MUIDataTable, {debounceSearchRender} from "mui-datatables";
 import { Edit } from '@material-ui/icons'
 import {isMobile} from 'react-device-detect';
+import { RemoveRedEye } from '@material-ui/icons'
+
 
 // styles
 import useStyles from "./styles";
@@ -105,7 +107,8 @@ function ClientViewPage(props) {
   const columns = [
     {
       name: "approved",
-      label: isMobile ? "App" : "Approved",
+      label: isMobile ? <p style={{ textTransform: 'capitalize' }}>App</p> : 
+        <p style={{ textTransform: 'capitalize' }}>Approved</p>,
       options: {
         filter: true,
         sort: true,
@@ -141,7 +144,7 @@ function ClientViewPage(props) {
     },
     {
       name: "client_entity_name",
-      label: "Client",
+      label: <p style={{ textTransform: 'capitalize' }}>Client</p>,
       options: {
         filter: false,
         sort: true,
@@ -149,7 +152,7 @@ function ClientViewPage(props) {
     },
     {
       name: "custom_field",
-      label: "Custom Field",
+      label: <p style={{ textTransform: 'capitalize' }}>Custom Field</p>,
       options: {
         filter: false,
         sort: true,
@@ -158,7 +161,7 @@ function ClientViewPage(props) {
     },
     {
       name: "address",
-      label: "Address",
+      label: <p style={{ textTransform: 'capitalize' }}>Address</p>,
       options: {
         filter: false,
         sort: true,
@@ -168,7 +171,7 @@ function ClientViewPage(props) {
     
     {
       name: "full_name",
-      label: "Employee",
+      label: <p style={{ textTransform: 'capitalize' }}>Created By</p>,
       options: {
         filter: true,
         sort: true,
@@ -183,7 +186,7 @@ function ClientViewPage(props) {
         },
       }
     },
-    {
+    /*{
       name: "location",
       label: "Location",
       options: {
@@ -191,10 +194,10 @@ function ClientViewPage(props) {
         sort: true,
         display: isMobile ? false : true,        
       },
-    },
+    },*/
     {
       name: "phone_number",
-      label: "Phone",
+      label: <p style={{ textTransform: 'capitalize' }}>Phone</p>,
       options: {
         filter: false,
         sort: true,
@@ -203,7 +206,29 @@ function ClientViewPage(props) {
     },
     {
       name: "client_id",
-      label: "Action",
+      label: <p style={{ textTransform: 'capitalize' }}>View</p>,
+      options: {
+        filter: false,
+        sort: false,
+        display: isMobile ? false : true,
+        customBodyRender: (value) => {
+          return (
+            <>
+              <IconButton
+                onClick={(e) => {
+                  viewHistory(e, value)
+                }}
+              >
+                <RemoveRedEye style={{ fontSize: '18' }} />
+              </IconButton>
+            </>
+          );
+        }
+      },
+    },
+    {
+      name: "client_id",
+      label: <p style={{ textTransform: 'capitalize' }}>Action</p>,
       options: {
         filter: false,
         sort: false,
@@ -228,6 +253,10 @@ function ClientViewPage(props) {
 
   const actionEdit = (e, i) => {
     history.push("/app/clientview/" + i + "/edit");
+  }
+
+  const viewHistory = (e, i) => {
+    history.push("/app/clientview/" + i + "/view");
   }
 
   const updateClientInfo = (client_id, user_id, approved, index) => {
@@ -272,11 +301,11 @@ function ClientViewPage(props) {
     downloadOptions: {
       filename: 'client_data'
     },
-    filter: true,
+    filter: false,
     search: false,
     responsive: 'scroll',
     fixedHeader: false, elevation: 0,
-    selectableRows: 'none',
+    selectableRows: 'single',
     rowsPerPageOptions: [5, 10, 20],
     resizableColumns: false,
     serverSide: true,
@@ -362,48 +391,6 @@ function ClientViewPage(props) {
       })
     },
     searchText: filterList.keyword,
-    // onDownload: (buildHead, buildBody, columns, data) => {
-    //   let body = {}
-    //   console.log('branch id',localStorage.getItem('branch_id'))
-    //   const branch_id = localStorage.getItem('branch_id');
-    //   if (branch_id !== "null") {
-    //     body = { company_id: localStorage.getItem('company_id'), branch_id: localStorage.getItem('branch_id'), 
-    //       isDirector: localStorage.getItem('isDirector')};
-    //   } else {
-    //     body = { company_id: localStorage.getItem('company_id'), isDirector: localStorage.getItem('isDirector')};
-    //   }
-      
-    //   fetch(`${SERVER_URL}getClientWithFilter`, {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(body)
-    //   })
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     console.log(columns)
-    //     const fields = [];
-    //     columns.map(item => {
-    //       if (item.label !== "Action") {
-    //         fields.push({
-    //           label: item.label,
-    //           value: item.name
-    //         })
-    //       }
-    //     })
-    //     const opts = { fields };
-    //     try {
-    //       const parser = new Parser(opts);
-    //       const csv = parser.parse(res.data);
-
-    //       const csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    //       FileSaver.saveAs(csvData, 'client_data.csv');
-    //     } catch (err) {
-    //       console.error(err);
-    //     }
-    //   })
-    //   return false;
-    // }
-
   };
 
   return (
@@ -418,13 +405,20 @@ function ClientViewPage(props) {
         :
           null
       }
-      <Grid container spacing={4}>
-        <Grid item xs={6} md={3} className={classes.formContainer}>
-          <CustomInput title="Client Name" placeholder="Search Client Name" handleChange={(e) => { e.persist(); handleSearchClient(e) }}/>
-        </Grid>
-        <Grid item xs={6} md={3} className={classes.formContainer}>
-          <CustomInput title="Created By" placeholder="Search Created By" handleChange={(e) => { e.persist(); handleSearchCreatedByName(e) }}/>
-        </Grid>
+      <div style={{display:"flex", flexDirection:"row"}}>
+        <div style={{display:"flex", flexDirection:"row"}}>
+          <div style={{width: "300px"}}>
+            <CustomInput title="Client Name" placeholder="Search Client Name" handleChange={(e) => { e.persist(); handleSearchClient(e) }}/>
+          </div>
+          <div style={{width: "300px"}}>
+            <CustomInput title="Created By" placeholder="Search Created By" handleChange={(e) => { e.persist(); handleSearchCreatedByName(e) }}/>
+          </div>
+        </div>
+        <div style={{transform: "translateY(-0px)", width: "100%"}}>
+          <PageTitle title="" button={["Add"]} data={dataSource} category="clientview" history={history}/>
+        </div>
+      </div>
+      <Grid>
         <Grid item xs={12} md={12}>
           <MuiThemeProvider theme={getMuiTheme()}>
             <div className={classes.tableContainer}>
@@ -438,8 +432,10 @@ function ClientViewPage(props) {
             </div>
           </MuiThemeProvider>
         </Grid>
+        
       </Grid>
-      <PageTitle title="" button={["Add New"]} data={dataSource} category="clientview" history={history}/>
+      
+
 
     </>
   );

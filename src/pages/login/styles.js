@@ -2,6 +2,10 @@ import { makeStyles } from "@material-ui/styles";
 // import background from "../../assets/images/background.jpg";
 
 export default makeStyles(theme => ({
+  customPaper: {
+    borderRadius: "60px",
+    // add other styles as needed
+  },
   container: {
     height: "100vh",
     width: "100vw",
@@ -47,10 +51,10 @@ export default makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
     [theme.breakpoints.down("md")]: {
       width: "50%",
     },
+    padding: "50px"
   },
   form: {
     width: 320,

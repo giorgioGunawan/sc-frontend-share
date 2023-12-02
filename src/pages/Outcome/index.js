@@ -89,7 +89,7 @@ function OutcomePage(props) {
         },
         {
             name: "name",
-            label: "Entity Name",
+            label: <p style={{ textTransform: 'capitalize' }}>Checkout Name</p>,
             options: {
                 filter: true,
                 sort: true,
@@ -107,7 +107,7 @@ function OutcomePage(props) {
         pagination: true,
         print: false,
         download: true,
-        filter: true,
+        filter: false,
         responsive: 'scroll',
         fixedHeader: false, elevation: 0,
         rowsPerPageOptions: [5, 10, 20],

@@ -36,6 +36,7 @@ import EditCompanyPage from "../../pages/Companys/EditCompany";
 import ClientsPage from "../../pages/Client/index.js";
 import AddClientPage from "../../pages/Client/AddClient";
 import EditClientPage from "../../pages/Client/EditClient";
+import ViewClientPage from "../../pages/Client/ViewClient";
 import SalesPage from "../../pages/Sales/index.js";
 import EditSalesPage from "../../pages/Sales/EditSales";
 import AddSalesPage from "../../pages/Sales/AddSales";
@@ -54,6 +55,12 @@ import OutcomePage from "../../pages/Settings/Outcome";
 import AddOutcomePage from "../../pages/Settings/Outcome/Detail/Add";
 import EditOutcomePage from "../../pages/Settings/Outcome/Detail/Edit";
 import OutcomeListDetailPage from "../../pages/Settings/Outcome/Detail";
+import AbsentFeaturePage from "../../pages/Settings/AbsentFeature";
+import AllowSelfCreateFeaturePage from '../../pages/Settings/AllowSelfCreateFeature';
+import CanvasCheckinFeaturePage from "../../pages/Settings/CanvasCheckinFeature";
+import CustomFormPage from "../../pages/Settings/CustomForm";
+import CustomFormListDetailPage from "../../pages/Settings/CustomForm/Detail";
+import AbsentFeatureDetailPage from "../../pages/Settings/AbsentFeature/Detail";
 
 function Layout(props) {
   var classes = useStyles();
@@ -103,6 +110,7 @@ function Layout(props) {
                 <Route exact path="/app/client" component={ClientsPage} />
                 <Route exact path="/app/client/add" component={AddClientPage} />
                 <Route exact path="/app/client/:client/edit" component={EditClientPage} />
+                <Route exact path="/app/client/:client/view" component={ViewClientPage} />
                 <Route exact path="/app/sales" component={SalesPage} />
                 <Route exact path="/app/sales/:sales/edit" component={EditSalesPage} />
                 <Route exact path="/app/sales/add" component={AddSalesPage} />
@@ -111,6 +119,8 @@ function Layout(props) {
                 <Route exact path="/app/settings/live-tracking" component={SettingsLiveTrackingPage} />
                 <Route exact path="/app/settings/live-tracking/:company_id" component={DetailSettingsLiveTrackingPage} />
                 <Route exact path="/app/settings/visit" component={VisitPage} />
+                <Route exact path="/app/settings/custom-form" component={CustomFormPage} />
+                <Route exact path="/app/settings/custom-form/:company_id" component={CustomFormListDetailPage} />
                 <Route exact path="/app/settings/visit/detail/:company_id/visiting-reason/add" component={AddVisitingReasonPage} />
                 <Route exact path="/app/settings/visit/detail/:company_id/visiting-reason/:id" component={EditVisitingReasonPage} />
                 <Route exact path="/app/settings/visit/detail/:company_id/product/add" component={AddProductPage} />
@@ -120,6 +130,10 @@ function Layout(props) {
                 <Route exact path="/app/settings/outcome/:company_id" component={OutcomeListDetailPage} />
                 <Route exact path="/app/settings/outcome/:company_id/add" component={AddOutcomePage} />
                 <Route exact path="/app/settings/outcome/:company_id/:id" component={EditOutcomePage} />
+                <Route exact path="/app/settings/absent-feature" component={AbsentFeaturePage} />
+                <Route exact path="/app/settings/absent-feature/:company_id" component={AbsentFeatureDetailPage} />
+                <Route exact path="/app/settings/allow-self-create" component={AllowSelfCreateFeaturePage} />
+                <Route exact path="/app/settings/canvas-checkin-feature" component={CanvasCheckinFeaturePage} />
                 <Route component={Error} />
               </Switch>
             </Grid>

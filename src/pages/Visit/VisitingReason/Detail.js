@@ -34,6 +34,7 @@ function DetailVisitingReasonPage(props) {
     const [products, setProducts] = useState([])
     const { id } = useParams()
     const [errorToastId, setErrorToastId] = useState(null);
+    const [name, setName] = useState('');
 
     useEffect(() => {
         getDetailVisitingReason()
@@ -58,6 +59,8 @@ function DetailVisitingReasonPage(props) {
                     includeProducts: !!data.products?.length,
                     products: data?.products
                 })
+
+                setName(data.name)
             })
     }
 
@@ -99,7 +102,7 @@ function DetailVisitingReasonPage(props) {
                     <Widget title="" disableWidgetMenu>
                         <Grid container spacing={1} className={classes.inputContainer}>
                             <FormControl className={classes.formControl}>
-                                <CustomInput title="Name" handleChange={handleChangeName} disabled value={form.name} />
+                                <CustomInput title="Name" handleChange={(e) => setName(e.target.value)} disabled value={name} />
                             </FormControl>
                         </Grid>
                         <Grid container spacing={1} className={classes.inputContainer}>

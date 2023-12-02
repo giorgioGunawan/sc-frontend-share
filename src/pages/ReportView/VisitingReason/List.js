@@ -87,7 +87,7 @@ function ListVisitingReason(props) {
         },
         {
             name: "name",
-            label: "Visiting Reason",
+            label: <p style={{ textTransform: 'capitalize' }}>Visiting Reason</p>,
             options: {
                 filter: true,
                 sort: true,
@@ -95,7 +95,7 @@ function ListVisitingReason(props) {
         },
         {
             name: "total_schedule",
-            label: "Count",
+            label: <p style={{ textTransform: 'capitalize' }}>Count</p>,
             options: {
                 filter: true,
                 sort: true
@@ -103,7 +103,7 @@ function ListVisitingReason(props) {
         },
         {
             name: "id",
-            label: "Action",
+            label: <p style={{ textTransform: 'capitalize' }}>Action</p>,
             options: {
               filter: false,
               sort: false,

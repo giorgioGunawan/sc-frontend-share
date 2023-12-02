@@ -42,9 +42,6 @@ function EditUser(props) {
   const companyData = useSelector(state => state.company);
   const branchData = useSelector(state => state.branch);
 
-  console.log('company Data', companyData);
-  console.log('branch Data', branchData);
-
   //Show notification
   const notify = (message) => toast(message);
 
@@ -74,10 +71,8 @@ function EditUser(props) {
   const update_id = props.match.params.user
   useEffect(() => {
     props.fetchBranch();
-    console.log('branchData 1',branchData);
     setDataSource(branchData.data);
     props.fetchCompany();
-    console.log('companyData 1',companyData)
     setDataSource(companyData.data);
     getUserInfo(update_id)
   }, [])
@@ -171,7 +166,6 @@ function EditUser(props) {
   }
 
   const branchObjArrayConverter = (original) => {
-    console.log('branch data original ====> ', original, branchData.data)
     let tmp = [];
     if (Boolean(original)) {
       if (original.length) {
@@ -187,13 +181,9 @@ function EditUser(props) {
       return []
     }
   }
-  console.log('companyData1', companyData)
-  console.log('branchData1', branchData)
   const companies = objArray2Array(companyData.company)
 
   const branches = branchObjArrayConverter(branchData.company)
-
-  console.log('branches', branches)
 
   const setCompanyIdfromCompanyName = (company_entity_name) => {
     let object = companyData.company.filter(item => item.company_entity_name === company_entity_name)
@@ -206,6 +196,7 @@ function EditUser(props) {
   }
 
   const setBranchIdfromBranchName = (branch_name) => {
+
     let object = branchData.company.filter(item => item.branch_name === branch_name)
     console.log('in setbranch object', object)
     if (object[0] != null) {

@@ -87,7 +87,7 @@ function ListOutcome(props) {
         },
         {
             name: "name",
-            label: "Outcome",
+            label: <p style={{ textTransform: 'capitalize' }}>Outcome</p>,
             options: {
                 filter: true,
                 sort: true,
@@ -95,7 +95,7 @@ function ListOutcome(props) {
         },
         {
             name: "total_schedule",
-            label: "Count",
+            label: <p style={{ textTransform: 'capitalize' }}>Count</p>,
             options: {
                 filter: true,
                 sort: true
@@ -103,7 +103,7 @@ function ListOutcome(props) {
         },
         {
             name: "id",
-            label: "Action",
+            label: <p style={{ textTransform: 'capitalize' }}>Action</p>,
             options: {
               filter: false,
               sort: false,

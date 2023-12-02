@@ -239,7 +239,7 @@ function DetailOutcome(props) {
     downloadOptions: {
       filename: 'schedule_data'
     },
-    filter: true,
+    filter: false,
     responsive: "scroll",
     fixedHeader: false, elevation: 0,
     rowsPerPageOptions: [5, 10, 20],

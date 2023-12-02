@@ -83,7 +83,7 @@ function ProductReasonPage(props) {
         },
         {
             name: "name",
-            label: "Entity Name",
+            label: <p style={{ textTransform: 'capitalize' }}>Product Name</p>,
             options: {
                 filter: true,
                 sort: true,
@@ -101,7 +101,7 @@ function ProductReasonPage(props) {
         pagination: true,
         print: false,
         download: true,
-        filter: true,
+        filter: false,
         responsive: 'scroll',
         fixedHeader: false, elevation: 0,
         rowsPerPageOptions: [5, 10, 20],

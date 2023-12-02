@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Input, IconButton, FormControlLabel, Switch, Divider, Button } from "@material-ui/core";
+import { Box, Grid, Input, IconButton, FormControlLabel, Switch, Divider, Button, List, ListItem, ListItemText } from "@material-ui/core";
 
 // styles
 import "react-toastify/dist/ReactToastify.css";
 import useStyles from "./styles";
+import { Input as AntdInput, Typography, Divider as AntdDivider, Text, Card} from "antd";
 
 // components
 import Widget from "../../components/Widget/Widget";
@@ -21,10 +22,10 @@ import { SERVER_URL } from '../../common/config';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import { DatePicker, DateTimePicker } from '@material-ui/pickers';
+import { names } from "tinycolor2";
 
 const positions = [
     toast.POSITION.TOP_LEFT,
@@ -49,6 +50,8 @@ const MenuProps = {
 function AddSchedule(props) {
     var classes = useStyles();
     let history = useHistory();
+    const { Text, Link } = Typography;
+    const { TextArea } = AntdInput;
     const [errorToastId, setErrorToastId] = useState(null);
     var [notificationsPosition, setNotificationPosition] = useState(2);
     const [dataSource, setDataSource] = useState([]);
@@ -72,6 +75,7 @@ function AddSchedule(props) {
         visiting_reason: 0,
         include_product: 0,
         product: [],
+        notes: "",
     })
 
     const [form, setForm] = useState({
@@ -198,6 +202,20 @@ function AddSchedule(props) {
     //input fields event
     const handleChange = (e, field) => {
 
+        if (field == "multiple_employee_names") {
+            setForm({
+                ...form,
+                user_id: e.target.value,
+            })
+        }
+
+        if (field == "notes") {
+            setState({
+                ...state,
+                notes: e,
+            })  
+        }
+
         if (field == "client_name") {
             if (clients.filter(item => item.value == e)[0] != null) {
                 setState({
@@ -272,15 +290,17 @@ function AddSchedule(props) {
 
     }
 
+    const getUserNamebyUserId = (user_id) => {
+        let object = userData.userview.filter(item => item.user_id == user_id)
+        if (object[0] != null) {
+            return object[0].full_name
+        }
+
+    }
+
     const getReasonIdFromReason = (reason) => {
         const visiting_reason = visitingReasonData.find(item => item.name === reason);
         const id = visiting_reason ? visiting_reason.id : null;
-        return id;
-    }
-
-    const getReasonFromReasonId = (reasonId) => {
-        const visiting_reason = visitingReasonData.find(item => item.id === reasonId);
-        const id = visiting_reason ? visiting_reason.name : null;
         return id;
     }
 
@@ -290,86 +310,184 @@ function AddSchedule(props) {
         return id;
     }
 
-    const getVisitingReasonIdFromReason = (visiting_reason) => {
-        const visit_reason_name = products.find(item => item.name === visiting_reason);
-        const id = visit_reason_name ? visit_reason_name.id : null;
-        return id;
-    }
-
     const onSaveandNew = async () => {
         if (state.client_name == null || state.client_name == "") {
             notify("Please enter client name.")
             return
         } else {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    client_id: state.client_id,
-                    user_id: [state.user_id],
-                })
-            };
-            var sales_client_id = 0;
-            await fetch(`${SERVER_URL}addSalesClient`, requestOptions)
-                .then(async response => {
-                    const data = await response.json();
-                    // check for error response
-                    if (!response.ok) {
-                        // get error message from body or default to response status
-                        const error = (data && data.message) || response.status;
-                    } else if (data.sales_client_id != null) {
-                        sales_client_id = data.sales_client_id;
-                    } else if (data.id != 0) {
-                        sales_client_id = data.sales_client_id;
-                    }
-
-                    var newDate = new Date(state.date);
-                    const year = newDate.getFullYear();
-                    const month = String(newDate.getMonth() + 1).padStart(2, "0");
-                    const day = String(newDate.getDate()).padStart(2, "0");
-                    const hours = String(newDate.getHours()).padStart(2, "0");
-                    const minutes = String(newDate.getMinutes()).padStart(2, "0");
-                    const seconds = String(newDate.getSeconds()).padStart(2, "0");
-                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
-                    let schedule_data = {
-                        user_id: state.user_id,
+            if (state.notes !== null || state.notes !== '') {
+                const requestOptionsClientNotes = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         client_id: state.client_id,
-                        schedule_datetime: formattedDate,
-                        predicted_time_spent: 1,
-                        reason: getReasonIdFromReason(state.visiting_reason),
-                        products: state.product.map(item => getProductIdFromProduct(item))
-                    };
+                        custom_field: state.notes
+                    })
+                };
 
-                    const reqOption = {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(schedule_data),
-                        };
-        
-                    await fetch(`${SERVER_URL}createNewSchedule`, reqOption)
-                            .then(async response => {
-                              const data = await response.json();
-                              // check for error response
-                              if (!response.ok) {
-                                const error = (data && data.message) || response.status;
-                                return Promise.reject(error);
-                              } else if (response.schedule_id == "0") {
-                                notify("This timeframe is already exist.");
-                                return;
-                              } else {
-                                notify("Successfully appended");
-                              }
-                            })
-                            .catch(error => {
-                              notify("Something went wrong!\n" + error);
-                            });
-
-                })
-                .catch(error => {
-                    notify('Something went wrong!\n' + error)
+                await fetch(`${SERVER_URL}updateClientNotes`, requestOptionsClientNotes)
+                .then(async response => {
+                    if (!response.ok) {
+                        console.log('fail update client notes g88');
+                    }
                 });
+            }
 
+            if(!isMultiple) {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        client_id: state.client_id,
+                        user_id: [state.user_id],
+                    })
+                };
+                var sales_client_id = 0;
+                await fetch(`${SERVER_URL}addSalesClient`, requestOptions)
+                    .then(async response => {
+                        const data = await response.json();
+                        // check for error response
+                        if (!response.ok) {
+                            // get error message from body or default to response status
+                            const error = (data && data.message) || response.status;
+                        } else if (data.sales_client_id != null) {
+                            sales_client_id = data.sales_client_id;
+                        } else if (data.id != 0) {
+                            sales_client_id = data.sales_client_id;
+                        }
+
+                        var newDate = new Date(state.date);
+                        const year = newDate.getFullYear();
+                        const month = String(newDate.getMonth() + 1).padStart(2, "0");
+                        const day = String(newDate.getDate()).padStart(2, "0");
+                        const hours = String(newDate.getHours()).padStart(2, "0");
+                        const minutes = String(newDate.getMinutes()).padStart(2, "0");
+                        const seconds = String(newDate.getSeconds()).padStart(2, "0");
+                        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                        let schedule_data = {
+                            user_id: state.user_id,
+                            client_id: state.client_id,
+                            schedule_datetime: formattedDate,
+                            predicted_time_spent: 1,
+                            reason: getReasonIdFromReason(state.visiting_reason),
+                            products: state.product.map(item => getProductIdFromProduct(item))
+                        };
+
+                        const reqOption = {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(schedule_data),
+                            };
+            
+                        await fetch(`${SERVER_URL}createNewSchedule`, reqOption)
+                                .then(async response => {
+                                const data = await response.json();
+                                // check for error response
+                                if (!response.ok) {
+                                    const error = (data && data.message) || response.status;
+                                    return Promise.reject(error);
+                                } else if (response.schedule_id == "0") {
+                                    notify("This timeframe is already exist.");
+                                    return;
+                                } else {
+                                    notify("Successfully appended");
+                                }
+                                })
+                                .catch(error => {
+                                notify("Something went wrong!\n" + error);
+                                });
+
+                    })
+                    .catch(error => {
+                        notify('Something went wrong!\n' + error)
+                    });
+
+                    setState(
+                        {
+                            client_name: '',
+                            user_name: "",
+                            client_id: '',
+                            user_id: '',
+                            date: Date.now(),
+                            userIDList: [],
+                            visiting_reason: 0,
+                            include_product: 0,
+                            product: [],
+                        }
+                    )
+            } else {
+                form.user_id.forEach(async (user_id) => {
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            client_id: state.client_id,
+                            user_id: [user_id],
+                        })
+                    };
+                    var sales_client_id = 0;
+
+                    await fetch(`${SERVER_URL}addSalesClient`, requestOptions)
+                    .then(async response => {
+                        const data = await response.json();
+                        // check for error response
+                        if (!response.ok) {
+                            // get error message from body or default to response status
+                            const error = (data && data.message) || response.status;
+                        } else if (data.sales_client_id != null) {
+                            sales_client_id = data.sales_client_id;
+                        } else if (data.id != 0) {
+                            sales_client_id = data.sales_client_id;
+                        }
+
+                        var newDate = new Date(state.date);
+                        const year = newDate.getFullYear();
+                        const month = String(newDate.getMonth() + 1).padStart(2, "0");
+                        const day = String(newDate.getDate()).padStart(2, "0");
+                        const hours = String(newDate.getHours()).padStart(2, "0");
+                        const minutes = String(newDate.getMinutes()).padStart(2, "0");
+                        const seconds = String(newDate.getSeconds()).padStart(2, "0");
+                        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                        let schedule_data = {
+                            user_id: user_id,
+                            client_id: state.client_id,
+                            schedule_datetime: formattedDate,
+                            predicted_time_spent: 1,
+                            reason: getReasonIdFromReason(state.visiting_reason),
+                            products: state.product.map(item => getProductIdFromProduct(item))
+                        };
+
+                        const reqOption = {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(schedule_data),
+                            };
+            
+                        await fetch(`${SERVER_URL}createNewSchedule`, reqOption)
+                                .then(async response => {
+                                const data = await response.json();
+                                // check for error response
+                                if (!response.ok) {
+                                    const error = (data && data.message) || response.status;
+                                    return Promise.reject(error);
+                                } else if (response.schedule_id == "0") {
+                                    notify("This timeframe is already exist.");
+                                    return;
+                                } else {
+                                    notify("Successfully appended");
+                                }
+                                })
+                                .catch(error => {
+                                notify("Something went wrong!\n" + error);
+                                });
+
+                    })
+                    .catch(error => {
+                        notify('Something went wrong!\n' + error)
+                    });
+                })
                 setState(
                     {
                         client_name: '',
@@ -383,6 +501,16 @@ function AddSchedule(props) {
                         product: [],
                     }
                 )
+
+                setForm(
+                    {
+                        user_id: [],
+                        start_date: null,
+                        end_date: null,
+                        tracking_type: null
+                    }
+                )
+            }
         }
 
     }
@@ -435,6 +563,14 @@ function AddSchedule(props) {
             include_product: 0,
             product: [],
         });
+        setForm(
+            {
+                user_id: [],
+                start_date: null,
+                end_date: null,
+                tracking_type: null
+            }
+        )
     }
 
     const clientList = clients.map(item => {
@@ -442,13 +578,14 @@ function AddSchedule(props) {
     })
 
     const handleIsMultipleToggle = (event) => {
-        setChecked(event.target.checked);
+        setIsMultiple(event.target.checked);
     };
 
     return (
         <>
             <div className={classes.singlePage}>
-                <PageTitle title="New sh" />
+                <PageTitle title="New Schedule" />
+                
                 <Grid container spacing={4}>
                     <ToastContainer
                         className={classes.toastsContainer}
@@ -460,26 +597,47 @@ function AddSchedule(props) {
                     />
                     <Grid item xs={12} md={12}>
                         <Widget title="" disableWidgetMenu>
-                            <Grid container spacing={1}>
-                                <Grid item xs={8} md={8} lg={8}></Grid>
-                                <Grid item xs={4} md={4} lg={4}>
-                                    
-                                </Grid>
-                            </Grid>
-                            <Switch
-                                checked={isMultiple}
-                                onChange={handleIsMultipleToggle}
-                                name="isMultiple"
-                                inputProps={{ 'aria-label': 'toggle switch' }}
-                            />
+                        <Grid container spacing={1}>
+                        
+                        </Grid>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                     <CustomCombobox req={true} name="Client Name" items={clientList} value={state.client_name}
                                         handleChange={(e) => handleChange(e, 'client_name')} />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomCombobox req={true} name="Employee Name" items={userviewData.map(item => item.full_name)} value={state.user_name}
-                                        handleChange={(e) => handleChange(e, 'employee_name')} />
+                                    {isMultiple? 
+                                        
+                                        <FormControl fullWidth style={{margin: '10px', width: '95%'}}>
+                                            <InputLabel id="employee-label">Multiple Employee Names</InputLabel>
+                                            <Select
+                                                labelId="employee-label"
+                                                id="employee-checkbox"
+                                                multiple
+                                                value={typeof form.user_id !== 'object' ? [] : form.user_id}
+                                                onChange={(e) => handleChange(e, 'multiple_employee_names')}
+                                                renderValue={(selected) => userviewData.filter(item => selected.includes(item.user_id)).map(item => item.full_name).join(', ')}
+                                            >
+                                                {userviewData.map((user) => (
+                                                    <MenuItem key={user.user_id} value={user.user_id}>
+                                                        <Checkbox checked={!!form.user_id?.find?.(user_id => user_id === user.user_id)} />
+                                                        <Box sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            width: '100%'
+                                                        }}>
+                                                            <div style={{marginRight: '6px'}}>
+                                                                {user.full_name}
+                                                            </div>
+                                                        </Box>
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>:
+                                        <CustomCombobox req={true} name="Employee Name" items={userviewData.map(item => item.full_name)} value={state.user_name}
+                                            handleChange={(e) => handleChange(e, 'employee_name')} />
+                                    }
                                     {/*<FormControl className={classes.formControl}>
                                         
                                         <InputLabel id="demo-mutiple-checkbox-label">Employee Name</InputLabel>
@@ -509,9 +667,9 @@ function AddSchedule(props) {
                                     {/*<CustomCombobox req={true} name="Date Time" items={clientList} value={state.client_name}
                                         handleChange={(e) => handleChange(e, 'client_name')} />*/}
                                     <DateTimePicker
+                                        style={{width: '95%'}}
                                         className={classes.formControl}
                                         ampm={false}
-                                        disableFuture
                                         label="Start Date"
                                         variant="inline"
                                         value={state.date}
@@ -524,9 +682,11 @@ function AddSchedule(props) {
                                 </Grid>
 
                             </Grid>
+                            {
+                            state.include_product ? 
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '95%'}}>
                                         <InputLabel id="demo-mutiple-checkbox-label">Products</InputLabel>
                                         <Select
                                             disabled={!state.include_product}
@@ -548,7 +708,13 @@ function AddSchedule(props) {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                            </Grid>
+                            </Grid>: <div></div>
+                            }
+                            &nbsp;&nbsp;&nbsp;
+                            {/*<div style={{paddingLeft: '10px', paddingRight: '10px'}}>
+                                <Text strong>Enter notes</Text>
+                                <TextArea rows={4} placeholder="Enter notes" maxLength={150} handleChange={(e) => handleChange(e, 'notes')} />
+                        </div>*/}
                             <Grid container spacing={1}>
                                 <Grid item xs={4} md={4} lg={4}></Grid>
                                 <Grid item xs={6} md={6} lg={8}>
@@ -583,6 +749,30 @@ function AddSchedule(props) {
                         </Widget>
                     </Grid>
                 </Grid>
+                <AntdDivider />
+                &nbsp;&nbsp;
+                <div style={{display: 'flex'}}>
+                    <div>
+                    <Text style={{fontWeight:'600'}}>Multiple Employees Scheduling</Text>
+                    <Switch
+                    checked={isMultiple}
+                    onChange={handleIsMultipleToggle}
+                    name="isMultiple"
+                    inputProps={{ 'aria-label': 'toggle switch' }}
+                    />
+                    </div>
+                    <div style={{marginLeft: '20px'}}>
+                        {isMultiple ?
+                        <Card type="inner" title="Assigned employee names" style={{ width: 300 }}>
+                        { 
+                            form.user_id.map((id) => (
+                            <p>{getUserNamebyUserId(id)}</p>
+                            ))
+                        }
+                        </Card>: <div></div>
+                        }
+                    </div>
+                </div>
             </div>
         </>
     );

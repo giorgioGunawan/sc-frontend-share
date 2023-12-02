@@ -33,6 +33,7 @@ function AddVisitingReasonPage(props) {
     const [products, setProducts] = useState([])
     const { company_id } = useParams()
     const [errorToastId, setErrorToastId] = useState(null);
+    const [name, setName] = useState('')
 
     //Show notification
     const notify = (message) => toast(message);
@@ -44,7 +45,7 @@ function AddVisitingReasonPage(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 company_id,
-                name: form.name,
+                name: name,
                 include_product: form.includeProduct
             })
         }
@@ -86,7 +87,7 @@ function AddVisitingReasonPage(props) {
                         <Widget title="" disableWidgetMenu>
                             <Grid container spacing={1} className={classes.inputContainer}>
                                 <FormControl className={classes.formControl}>
-                                    <CustomInput title="Name" handleChange={handleChangeName} value={form.name} />
+                                    <CustomInput title="Name" handleChange={(e) => setName(e.target.value)} value={name} />
                                 </FormControl>
                             </Grid>
                             <Grid container spacing={1} className={classes.inputContainer}>

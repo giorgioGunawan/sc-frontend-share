@@ -26,6 +26,7 @@ function fetchScheduleView(params) {
             }
         }        
         setTimeout(() => {
+            console.log('g78body', body);
             fetch(`${SERVER_URL}getScheduleWithFilter`, {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -36,6 +37,7 @@ function fetchScheduleView(params) {
                 if(res.error) {
                     throw(res.error);
                 }
+                console.log('g78response', res);
                 dispatch(fetchScheduleViewSuccess(res));
                 console.log("Get Schedule===>", res)
                 return res;

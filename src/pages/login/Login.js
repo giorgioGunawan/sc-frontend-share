@@ -12,7 +12,9 @@ import {
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Paper from '@mui/material/Paper';
 
+import sclogo from './../../assets/images/feature-image.jpeg';
 // styles
 import useStyles from "./styles";
 
@@ -108,45 +110,48 @@ function Login(props) {
   }
 
   return (
+    
     <Grid container className={classes.container}>
+      <Paper elevation={3} className={classes.customPaper}>
       <ToastContainer />
+      
       <div className={classes.formContainer}>
         <div className={classes.form}>
           <Tabs
             value={activeTabId}
             onChange={(e, id) => setActiveTabId(id)}
-            indicatorColor="primary"
-            textColor="primary"
+            indicatorColor="secondary"
+            textColor="secondary"
             centered
           >
-            <Tab label="Login" classes={{ root: classes.tab }} />
-            <Tab label="New User" classes={{ root: classes.tab }} />
+            {/**<Tab label="Login" classes={{ root: classes.tab }} />
+            <Tab label="New User" classes={{ root: classes.tab }} />**/}
           </Tabs>
           {activeTabId === 0 && (
             <React.Fragment>
-              <Typography variant="h3" className={classes.greeting}>
-                Scout Hippo Admin
-              </Typography>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
+              <div style={{display: "flex", width: "full", justifyContent:"center"}}>
+                <img src={sclogo} style={{width:"200px"}} alt="Scout Hippo" className={classes.logo} />
+              </div>
+            <Fade in={error}>
+              <Typography color="secondary" className={classes.errorMessage}>
                 Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
-              <TextField
-                id="email"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={loginValue}
-                onChange={e => setLoginValue(e.target.value)}
-                margin="normal"
-                placeholder="Email Adress"
-                type="email"
-                fullWidth
-              />
+              </Typography>
+            </Fade>
+            <TextField
+              id="email"
+              InputProps={{
+                classes: {
+                  underline: classes.textFieldUnderline,
+                  input: classes.textField,
+                },
+              }}
+              value={loginValue}
+              onChange={e => setLoginValue(e.target.value)}
+              margin="normal"
+              placeholder="Email Adress"
+              type="email"
+              fullWidth
+            />
               <TextField
                 id="password"
                 InputProps={{
@@ -162,7 +167,7 @@ function Login(props) {
                 type="password"
                 fullWidth
               />
-              <div className={classes.formButtons}>
+              <div className={classes.formButtons} style={{justifyContent: "right"}}>
                 {isLoading ? (
                   <CircularProgress size={26} className={classes.loginLoader} />
                 ) : (
@@ -303,10 +308,12 @@ function Login(props) {
           )}
         </div>
         <Typography color="primary" className={classes.copyright}>
-          © 2022 ScoutHippo. All rights reserved.
+          © 2023 ScoutHippo. All rights reserved.
         </Typography>
       </div>
+      </Paper>
     </Grid>
+    
   );
 }
 

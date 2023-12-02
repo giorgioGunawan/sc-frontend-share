@@ -1,27 +1,31 @@
 import React from 'react'
-import Tabs from '../../components/Tabs'
+import { Tabs } from 'antd';
 import VisitingReason from './VisitingReason/index.js'
 import Outcome from './Outcome/index.js'
 import ScheduleReport from '../Report/ScheduleReport/ScheduleReport'
+import CalendarView from '../ScheduleView/CalendarView'
 
 const ITEMS = [
     {
-      title: 'Schedule Report',
-      component: <ScheduleReport />
+      key: '1',
+      label: 'Schedule Report',
+      children: <ScheduleReport />
     },
     {
-      title: 'Outcome Report',
-      component: <Outcome />
+      key: '2',
+      label: 'Outcome Report',
+      children: <Outcome />
     },
     {
-        title: 'Visiting Reason',
-        component: <VisitingReason />
-    },   
+        key: '3',
+        label: 'Visiting Reason',
+        children: <VisitingReason />
+    },
 ]
 
 const ReportView = () => {
   return (
-    <Tabs items={ITEMS} />
+    <Tabs style={{margin:"10px"}} defaultActiveKey="1" items={ITEMS} />
   )
 }
 

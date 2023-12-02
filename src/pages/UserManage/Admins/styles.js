@@ -19,6 +19,7 @@ export default makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: '100%',
+    width: '400px'
   },
   filePicker: {
     margin: theme.spacing(1),

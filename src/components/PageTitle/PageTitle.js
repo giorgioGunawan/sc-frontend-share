@@ -18,6 +18,7 @@ export default function PageTitle(props) {
 
   const iconVar = [];
   iconVar["Add New"] = <AddIcon />
+  iconVar["Add"] = <AddIcon />
   iconVar["Add Income"] = <AddIcon />
   iconVar["Add Expense"] = <AddIcon />
   iconVar["Print"] = <Print />
@@ -74,7 +75,7 @@ export default function PageTitle(props) {
         }
         break;
       case 'clientview':
-        if (item === 'Add New') {
+        if (item === 'Add New' || item === "Add") {
           props.history.push("/app/clientview/add");
         }
         break;

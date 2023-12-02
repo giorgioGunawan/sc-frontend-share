@@ -112,7 +112,7 @@ function SalesViewPage(props) {
     },
     {
       name: "full_name",
-      label: "User Name",
+      label: <p style={{ textTransform: 'capitalize' }}>Employee Name</p>,
       options: {
         filter: true,
         sort: true,
@@ -129,7 +129,7 @@ function SalesViewPage(props) {
     },
     {
       name: "client_entity_name",
-      label: "Client Name",
+      label: <p style={{ textTransform: 'capitalize' }}>Client Name</p>,
       options: {
         filter: false,
         sort: true,
@@ -138,7 +138,7 @@ function SalesViewPage(props) {
     },
     {
       name: "sales_client_id",
-      label: "Action",
+      label: <p style={{ textTransform: 'capitalize' }}>Action</p>,
       options: {
         filter: false,
         sort: false,
@@ -186,7 +186,7 @@ function SalesViewPage(props) {
     downloadOptions: {
       filename: 'sales_client_data'
     },
-    filter: true,
+    filter: false,
     fixedHeader: false, elevation: 0,
     rowsPerPageOptions: [5, 10, 20],
     resizableColumns: false,
@@ -386,7 +386,7 @@ function SalesViewPage(props) {
 
         </Grid>
       </Grid>
-      <PageTitle title="" button={["Add New"]} data={dataSource} category="salesview" history={history} />
+      {/*<PageTitle title="" button={["Add New"]} data={dataSource} category="salesview" history={history} />*/}
     </>
   );
 }

@@ -1,22 +1,24 @@
 import React from 'react'
-import Tabs from '../../components/Tabs'
+import { Tabs } from 'antd';
 import Product from './Product'
 import VisitingReason from './VisitingReason'
 
 const ITEMS = [
     {
-        title: 'Visiting Reason',
-        component: <VisitingReason />
+        key: '1',
+        label: 'Visiting Reason',
+        children: <VisitingReason />
     },
     {
-        title: 'Product',
-        component: <Product />
+        key: '2',
+        label: 'Product',
+        children: <Product />
     },
 ]
 
 const VisitPage = () => {
   return (
-    <Tabs items={ITEMS} />
+    <Tabs style={{margin:"10px"}} defaultActiveKey="1" items={ITEMS} />
   )
 }
 

@@ -77,7 +77,7 @@ const structure = [
       },
       {
         id: 4,
-        label: "Employee Client",
+        label: "Client Relationship",
         link: "/app/sales",
         icon: <TransferWithinAStationOutlined fontSize="small" />,
       },
@@ -119,6 +119,30 @@ const structure = [
         link: "/app/settings/outcome",
         icon: <PlaceIcon fontSize="small" />,
       },
+      {
+        id: 11,
+        label: "Absent Feature",
+        link: "/app/settings/absent-feature",
+        icon: <PlaceIcon fontSize="small" />,
+      },
+      {
+        id: 12,
+        label: "Self Client",
+        link: "/app/settings/allow-self-create",
+        icon: <PlaceIcon fontSize="small" />,
+      },
+      {
+        id: 13,
+        label: "Canvas Checkin Feature",
+        link: "/app/settings/canvas-checkin-feature",
+        icon: <PlaceIcon fontSize="small" />,
+      },
+      {
+        id: 14,
+        label: "Custom Form",
+        link: "/app/settings/custom-form",
+        icon: <PlaceIcon fontSize="small" />,
+      },
     ]
   },
 ];
@@ -147,6 +171,7 @@ function Sidebar({ location }) {
   });
 
   return (
+    <div>
     <BrowserView>
     <Drawer
       variant={isPermanent ? "permanent" : "temporary"}
@@ -198,6 +223,63 @@ function Sidebar({ location }) {
       </div>
     </Drawer>
     </BrowserView>
+    <MobileView>
+    <div
+      style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        height:"60px",
+        backgroundColor: "#F5F5F5",
+        display: "flex",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        padding: "10px",
+        borderTop: "1px solid #E0E0E0",
+        zIndex: 9999, // set a high z-index value
+      }}
+    >
+      <a href="#/app/usermanage/admin">
+        Ad
+      </a>
+      <a href="#/app/usermanage/user">
+        Us
+      </a>
+      <a href="#/app/company">
+        Co
+      </a>
+      <a href="#/app/branch">
+        Br
+      </a>
+      <a href="#/app/client">
+        Cl
+      </a>
+      <a href="#/app/settings/live-tracking">
+        LT
+      </a>
+      <a href="#/app/settings/visit">
+        Vi
+      </a>
+      <a href="#/app/settings/outcome">
+        Ou
+      </a>
+      <a href="#/app/settings/absent-feature">
+        Ab
+      </a>
+      <a href="#/app/settings/allow-self-create">
+        Allo
+      </a>
+      <ArrowBackIcon style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}
+        onClick={() => {
+          localStorage.clear();
+          window.location.reload();
+        } }>
+        Log Out
+      </ArrowBackIcon>
+    </div>
+  </MobileView>
+  </div>
   );
 
   // ##################################################################

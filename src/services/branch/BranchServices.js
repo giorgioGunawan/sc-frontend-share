@@ -17,7 +17,7 @@ function fetchBranch() {
                     throw(res.error);
                 }
                 dispatch(fetchBranchSuccess(res));
-                console.log("Get Branch===>", res)
+                console.log("g67 Get Branch===>", res)
                 return res;
             })
             .catch(error => {

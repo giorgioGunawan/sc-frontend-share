@@ -8,8 +8,9 @@ export default makeStyles(theme => ({
      * EditInvoice.js
      */
     formControl: {
+      marginTop: theme.spacing(1),
       margin: theme.spacing(1),
-      minWidth: '100%',
+      width: "95%"
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -28,6 +29,11 @@ export default makeStyles(theme => ({
      */
     comboContainer: {
       marginLeft: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      width: "95%",
+    },
+    comboContainer2: {
       display: 'flex',
       alignItems: 'center',
     },

@@ -9,6 +9,7 @@ import {
   TransferWithinAStationOutlined,
   TimerOutlined,
 } from "@material-ui/icons";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useTheme } from "@material-ui/styles";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
@@ -46,21 +47,9 @@ import { Typography } from "../Wrappers/Wrappers";
 const structure = localStorage.getItem('allow_so') != 0 ? [
   {
     id: 0,
-    label: "CRM",
-    link: "/app/clientview",
-    icon: <PeopleAltOutlined fontSize="small" />,
-    children: [
-      {
-        label: "Clients",
-        link: "/app/clientview",
-        icon: <VisibilityOutlinedIcon fontSize="small" />,
-      },
-      {
-        label: "Employee Client",
-        link: "/app/salesview",
-        icon: <TransferWithinAStationOutlined fontSize="small" />,
-      },
-    ]
+    label: "Schedule",
+    link: "/app/scheduleview",
+    icon: <TimerOutlined fontSize="small" />,
   },
   {
     id: 1,
@@ -118,12 +107,7 @@ const structure = localStorage.getItem('allow_so') != 0 ? [
     ]
   },
   */
-  {
-    id: 4,
-    label: "Schedule",
-    link: "/app/scheduleview",
-    icon: <TimerOutlined fontSize="small" />,
-  },
+  
   /*
   {
     id: 6,
@@ -144,11 +128,33 @@ const structure = localStorage.getItem('allow_so') != 0 ? [
     ],
   },*/
   {
+    id: 4,
+    label: "CRM",
+    link: "/app/clientview",
+    icon: <PeopleAltOutlined fontSize="small" />,
+    children: [
+      {
+        label: "Clients",
+        link: "/app/clientview",
+      },
+      {
+        label: "Relationships",
+        link: "/app/salesview",
+      },
+    ]
+  },
+  {
     id: 5,
     label: "Report",
     link: "/app/reportview",
     icon: <VisibilityOutlinedIcon fontSize="small" />,
   },
+  /*{
+    id: 6,
+    label: "Daily View",
+    link: "/app/calendarview",
+    icon: <CalendarMonthIcon fontSize="small" />,
+  },*/
   {
     id: 11,
     label: "Settings",
@@ -164,27 +170,20 @@ const structure = localStorage.getItem('allow_so') != 0 ? [
         link: "/app/outcome",
         icon: <PlaceIcon fontSize="small" />,
       },
+      {
+        label: "Absent",
+        link: "/app/settings/absent-feature",
+        icon: <PlaceIcon fontSize="small" />,
+      },
     ]
   },
 
 ] : [
     {
       id: 0,
-      label: "CRM",
-      link: "/app/clientview",
-      icon: <PeopleAltOutlined fontSize="small" />,
-      children: [
-        {
-          label: "Clients",
-          link: "/app/clientview",
-          icon: <VisibilityOutlinedIcon fontSize="small" />,
-        },
-        {
-          label: "Employee Client",
-          link: "/app/salesview",
-          icon: <TransferWithinAStationOutlined fontSize="small" />,
-        },
-      ]
+      label: "Schedule",
+      link: "/app/scheduleview",
+      icon: <TimerOutlined fontSize="small" />,
     },
     {
       id: 1,
@@ -242,9 +241,19 @@ const structure = localStorage.getItem('allow_so') != 0 ? [
     // },
     {
       id: 4,
-      label: "Schedule",
-      link: "/app/scheduleview",
-      icon: <TimerOutlined fontSize="small" />,
+      label: "CRM",
+      link: "/app/clientview",
+      icon: <PeopleAltOutlined fontSize="small" />,
+      children: [
+        {
+          label: "Clients",
+          link: "/app/clientview",
+        },
+        {
+          label: "Relationships",
+          link: "/app/salesview",
+        },
+      ]
     },
     {
       id: 5,
@@ -252,6 +261,12 @@ const structure = localStorage.getItem('allow_so') != 0 ? [
       link: "/app/reportview",
       icon: <VisibilityOutlinedIcon fontSize="small" />,
     },
+    /*{
+      id: 6,
+      label: "Daily View",
+      link: "/app/calendarview",
+      icon: <CalendarMonthIcon fontSize="small" />,
+    },*/
     {
       id: 11,
       label: "Settings",
@@ -265,6 +280,11 @@ const structure = localStorage.getItem('allow_so') != 0 ? [
         {
           label: "Outcome",
           link: "/app/outcome",
+          icon: <PlaceIcon fontSize="small" />,
+        },
+        {
+          label: "Absent",
+          link: "/app/settings/absent-feature",
           icon: <PlaceIcon fontSize="small" />,
         },
       ]
@@ -378,6 +398,13 @@ function Sidebar({ location }) {
           <a href="#/app/reportview">
             <VisibilityOutlinedIcon fontSize="small" />
           </a>
+          <ArrowBackIcon style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}
+            onClick={() => {
+              localStorage.clear();
+              window.location.reload();
+            } }>
+            Log Out
+          </ArrowBackIcon>
         </div>
       </MobileView>
       </div>
@@ -387,10 +414,12 @@ function Sidebar({ location }) {
   function handleWindowWidthChange() {
     var windowWidth = window.innerWidth;
     var breakpointWidth = theme.breakpoints.values.md;
-    var isSmallScreen = windowWidth < breakpointWidth;
+    var isSmallScreen = windowWidth < '500px';
 
     if (isSmallScreen && isPermanent) {
-      setPermanent(false);
+      // this does the ugly window overlap thing
+      // setPermanent(false);
+
     } else if (!isSmallScreen && !isPermanent) {
       setPermanent(true);
     }

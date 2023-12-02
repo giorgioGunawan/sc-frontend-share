@@ -15,9 +15,10 @@
 // export const SERVER_URL = "http://localhost:4000/";
 // export const SERVER_MAP_TRACKER_URL = "http://localhost:4000/";
 // export const SERVER_URL = "http://localhost:4000/";
-// export const SERVER_URL = "http://localhost:4000/";
 export const SERVER_URL = "http://109.106.255.118:4000/";
 // export const SERVER_MAP_TRACKER_URL = "http://localhost:4000/";
-export const WEBSOCKET_MAP_TRACKER_URL = "ws://109.106.255.118:4001/";
+// export const WEBSOCKET_MAP_TRACKER_URL = "ws://109.106.255.118:4001/";
+export const WEBSOCKET_MAP_TRACKER_URL = "ws://localhost:4001/";
+
 export const GOOGLE_MAP_API_KEY = "redacted"
 

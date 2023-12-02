@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Typography, IconButton, FormControlLabel, Switch, Divider, Button } from "@material-ui/core";
+import { TextField, FormControl } from "@material-ui/core";
+import { Input, Typography as TypographyD } from 'antd';
 
 // styles
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +23,9 @@ import { GOOGLE_MAP_API_KEY } from '../../common/config';
 import fetchCompany from "../../services/company/CompanyService";
 import Geocode from "react-geocode";
 Geocode.setApiKey(GOOGLE_MAP_API_KEY);
+
+const { Text } = TypographyD;
+const { TextArea } = Input;
 
 const positions = [
     toast.POSITION.TOP_LEFT,
@@ -49,7 +54,7 @@ function EditClient(props) {
         address: "",
         location: "",
         phone_number: '',
-        company_id: '',
+        company_id: localStorage.getItem('company_id').split(', ')[0],
         company_entity_name: '',
         companyIDList: localStorage.getItem('company_id').split(', '),
         approved: '0',
@@ -254,33 +259,33 @@ function EditClient(props) {
                         <Widget title="" disableWidgetMenu>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput req={true} title="Entity Name" value={state.entity_name}
+                                    <CustomInput req={true} title="Client Name" value={state.entity_name}
                                         handleChange={(e) => handleChange(e, 'entity_name')} />
+                                        &nbsp;&nbsp;
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput req={true} title="Custom Field" value={state.custom_field} handleChange={(e) => handleChange(e, 'custom_field')} />
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                     <CustomInput req={true} title="Phone Number" value={state.phone_number} handleChange={(e) => handleChange(e, 'phone_number')} />
+                                    &nbsp;&nbsp;
                                 </Grid>
-
-                                <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomCombobox req={true} name="Company Name" items={companies} value={state.company_entity_name}
-                                        handleChange={(e) => handleChange(e, 'company_entity_name')} />
-                                </Grid>
-
                             </Grid>
                             <Grid container spacing={1}>
+                                
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                     <CustomInput req={true} title="Address" value={state.address} handleChange={(e) => handleChange(e, 'address')} />
+                                    &nbsp;&nbsp;
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                     <CustomInput req={true} title="Location(lat lng)" value={state.location} handleChange={(e) => handleChange(e, 'location')} />
+                                    &nbsp;&nbsp;
                                 </Grid>
-
                             </Grid>
+                            <Grid container spacing={1}>
+                                <div style={{margin:"10px", width: "100%"}}>
+                                    <CustomInput req={true} title="Custom Field" textarea={true} value={state.custom_field} handleChange={(e) => handleChange(e, 'custom_field')} />
+                                </div>
+                            </Grid>
+                            &nbsp;&nbsp;
+
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                     <Grid item>

@@ -28,6 +28,7 @@ import { DatePicker, DateTimePicker } from '@material-ui/pickers';
 import moment from 'moment'
 import fetchScheduleDetail from '../../services/schedule/ScheduleDetailService'
 import DailyScheduleView from './DailyScheduleView';
+import DailyScheduleViewClean from './DailyScheduleViewClean';
 import ScheduleMapView from './MapView';
 import Paper from '@material-ui/core/Paper';
 
@@ -56,6 +57,7 @@ function CalendarView(props) {
     let history = useHistory();
     const [errorToastId, setErrorToastId] = useState(null);
     var [notificationsPosition, setNotificationPosition] = useState(2);
+    const [isSubmitPressed, setIsSubmitPressed] = useState([]);
     const [dataSource, setDataSource] = useState([]);
     const userData = useSelector(state => state.userview);
     const clientData = useSelector(state => state.clientview);
@@ -277,6 +279,8 @@ function CalendarView(props) {
     }
 
     const handleSubmit = async (e) => {
+        
+        setIsSubmitPressed(true);
         const date = new Date(state.date);
         // create a new Date object with the same date as the given date object, but with time set to 00:00:00
         const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 1);
@@ -294,26 +298,6 @@ function CalendarView(props) {
         }, (resScheduleDetail, ok) => {
             console.log(ok)
             if (ok) {
-                /*
-                setSchedules(resScheduleDetail)
-                props.fetchMapTrackerHistories({
-                    user_id: form.user_id,
-                    start_date,
-                    end_date,
-                }, (resTrackerHistories, ok) => {
-                    setIsLoading(false)
-                    if (ok && !resTrackerHistories?.data?.length && !resScheduleDetail?.length) {
-                        toast('Data is empty')
-                    }
-                    const temp = resTrackerHistories?.data?.map?.((item, i) => {
-                        return {
-                            ...item,
-                            is_last: resTrackerHistories?.data?.length === i+1
-                        }
-                    })
-                    setHistories(temp || [])
-                })*/
-
                 console.log('gge', resScheduleDetail)
                 const formattedSchedDetail = resScheduleDetail.map(item => {
                     const dateObj = new Date(item.check_out_datetime); // create a Date object from sDate
@@ -524,8 +508,7 @@ function CalendarView(props) {
 
     return (
         <>
-            <div className={classes.singlePage}>
-                <PageTitle title="Employee Schedule" />
+            <div className={classes.singlePage} style={{margin:"30px"}}>
                 <Grid container spacing={4}>
                     <ToastContainer
                         className={classes.toastsContainer}
@@ -536,7 +519,7 @@ function CalendarView(props) {
                         progressClassName={classes.notificationProgress}
                     />
                     <Grid item xs={12} md={12}>
-                        <Widget title="" disableWidgetMenu>
+                        <Widget title="" disableWidgetMenu >
                             <Grid container spacing={1}>
                                 <Grid item xs={8} md={8} lg={8}></Grid>
                                 <Grid item xs={4} md={4} lg={4}>
@@ -545,8 +528,10 @@ function CalendarView(props) {
                             </Grid>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
+                                    {userviewData ? 
                                     <CustomCombobox req={true} name="Employee Name" items={userviewData.map(item => item.full_name)} value={state.user_name}
-                                        handleChange={(e) => handleChange(e, 'employee_name')} />
+                                        handleChange={(e) => handleChange(e, 'employee_name')} /> : <></>
+                                    }
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
                                     <div className={classes.datePickerContainer}>
@@ -570,20 +555,23 @@ function CalendarView(props) {
                 </Grid>
                 &nbsp;
                 &nbsp;
-                <div style={{ display: 'flex' }}>
-                    <div style={{ width: 'auto' }}>
-                        <DailyScheduleView schedules={dailySched} style={{ padding:'3px'}} />
-                    </div>
-
-                    {
-                        state.start_date &&
-                        <div style={{ paddingLeft: "10px" }}> 
-                        <Paper elevation={3}>
-                            <ScheduleMapView user_id={state.user_id} start_time={state.start_date} end_time={state.end_date}/>
-                        </Paper>
-                        </div>
-                    }
+                <Paper elevation={7}>
+                <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                
+                <div style={{ width: 'auto' }}>
+                    {/*<DailyScheduleView schedules={dailySched} style={{ padding: '3px' }}/>*/}
+                    <DailyScheduleViewClean schedules={dailySched} style={{ padding: '3px' }} />
                 </div>
+                {state.start_date && isSubmitPressed == true && (
+                    <div style={{ paddingLeft: '10px', flexGrow: 1, height:'700px' }}> 
+                    
+                        <ScheduleMapView user_id={state.user_id} start_time={state.start_date} end_time={state.end_date} isSubmitPressed={isSubmitPressed}/>
+                    
+                    </div>
+                )}
+                
+                </div>
+                </Paper>
             </div>
         </>
     );

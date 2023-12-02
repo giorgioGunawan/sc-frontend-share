@@ -31,6 +31,7 @@ function AddVisitingReasonPage(props) {
         name: '',
         includeProduct: false,
     })
+    const [name, setName] = useState('')
     const [errorToastId, setErrorToastId] = useState(null);
 
     //Show notification
@@ -43,7 +44,7 @@ function AddVisitingReasonPage(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 company_id: localStorage.getItem('company_id'),
-                name: form.name,
+                name: name,
                 include_product: form.includeProduct
             })
         }
@@ -62,10 +63,14 @@ function AddVisitingReasonPage(props) {
     }
 
     const handleChangeName = (e) => {
-        setForm(form => ({
-            ...form,
-            name: e?.target?.value
-        }))
+        console.log('g88 here', e);
+        if(e?.target?.value) {
+            setForm(form => ({
+                ...form,
+                name: e.target.value
+            }))
+        }
+        
     }
 
     const handleChangeIncludeProduct = (e) => {
@@ -85,7 +90,7 @@ function AddVisitingReasonPage(props) {
                         <Widget title="" disableWidgetMenu>
                             <Grid container spacing={1} className={classes.inputContainer}>
                                 <FormControl className={classes.formControl}>
-                                    <CustomInput title="Name" handleChange={handleChangeName} value={form.name} />
+                                    <CustomInput title="Name" handleChange={(e) => setName(e.target.value)} value={name} />
                                 </FormControl>
                             </Grid>
                             <Grid container spacing={1} className={classes.inputContainer}>

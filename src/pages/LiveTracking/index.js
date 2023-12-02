@@ -222,6 +222,8 @@ const LiveTrackingPage = (props) => {
                         })
                     })
                     toast('live tracker is active')
+                    console.log('hello', temp2)
+                    console.log('hello form user id', form.user_id)
                     setTracker(temp2 || [])
                     setSocketUrl(`${WEBSOCKET_MAP_TRACKER_URL}live-tracking?user_id=${JSON.stringify(form.user_id)}`)
                 }

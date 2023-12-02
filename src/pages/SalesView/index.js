@@ -1,22 +1,24 @@
 import React from 'react'
-import Tabs from '../../components/Tabs'
+import { Tabs } from 'antd';
 import Sales from './Sales'
 import Import from './Import'
 
 const ITEMS = [
     {
-        title: 'Employee Client Relationship View',
-        component: <Sales />
+        key: '1',
+        label: 'Employee Client Relationship View',
+        children: <Sales />
     },
     {
-        title: 'Import Employee Client Relationship',
-        component: <Import />
+        key: '2',
+        label: 'Add Employee Client Relationship',
+        children: <Import />
     },
 ]
 
 const SalesView = () => {
   return (
-    <Tabs items={ITEMS} />
+    <Tabs style={{margin:"10px"}} defaultActiveKey="1" items={ITEMS} />
   )
 }
 

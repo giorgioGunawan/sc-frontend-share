@@ -39,6 +39,8 @@ function AddClient(props) {
     const [dataSource, setDataSource] = useState([]);
     const companyData = useSelector(state => state.company);
 
+    console.log('g888',companyData)
+
     //Show notification
     const notify = (message) => toast(message);
 
@@ -60,13 +62,13 @@ function AddClient(props) {
         address: "",
         location: '',
         phone_number: '',
-        company_id: '',
+        company_id: localStorage.getItem('company_id').split(', ')[0],
         companyIDList: localStorage.getItem('company_id').split(', ')
     })
 
     useEffect(() => {
         props.fetchCompany();
-        console.log(companyData)
+        
         setDataSource(companyData.company);
     }, [])
 
@@ -105,7 +107,7 @@ function AddClient(props) {
     //input fields event
     const handleChange = (e, field) => {
 
-
+        console.log('gg88888',state);
         let comboFields = ['company_entity_name'];
         if (field == "address") {
             const { name, value } = e.target;
@@ -300,33 +302,30 @@ function AddClient(props) {
                         <Widget title="" disableWidgetMenu>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput req={true} title="Entity Name" value={state.entity_name}
+                                    <CustomInput placeholder="Client Name" req={true} title="Client Name" value={state.entity_name}
                                         handleChange={(e) => handleChange(e, 'entity_name')} />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput title="Custom Field" value={state.custom_field} handleChange={(e) => handleChange(e, 'custom_field')} />
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-
-                                <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput title="Phone Number" value={state.phone_number} handleChange={(e) => handleChange(e, 'phone_number')} />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomCombobox req={true} name="Company Name" items={companies} value={state.company_entity_name}
-                                        handleChange={(e) => handleChange(e, 'company_entity_name')} />
+                                    <CustomInput placeholder="Phone Number" title="Phone Number" value={state.phone_number} handleChange={(e) => handleChange(e, 'phone_number')} />
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput title="Address" value={state.address} handleChange={(e) => handleChange(e, 'address')}
+                                    <CustomInput placeholder="Address" title="Address" value={state.address} handleChange={(e) => handleChange(e, 'address')}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                                    <CustomInput title="Location(lat lng)" value={state.location} disabled handleChange={(e) => handleChange(e, 'location')} />
+                                    <CustomInput placeholder="Location (Lat, Long)" title="Location(lat lng)" value={state.location} disabled handleChange={(e) => handleChange(e, 'location')} />
                                 </Grid>
                             </Grid>
-                            <Divider />
+                            <Grid container spacing={1}>
+                            <div style={{margin:"10px", width: "100%"}}>
+                                <CustomInput textarea={true} placeholder="Custom Field" title="Custom Field" value={state.custom_field} handleChange={(e) => handleChange(e, 'custom_field')} />
+                            </div>
+                            </Grid>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <br/>
+                            <Divider/>
                             <Grid container spacing={1}>
                                 <Grid item xs={4} md={4} lg={4}></Grid>
                                 <Grid item xs={6} md={6} lg={8}>

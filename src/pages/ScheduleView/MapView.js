@@ -85,6 +85,8 @@ const ScheduleMapView = (props) => {
     const [selectedSchedule, setSelectedSchedule] = useState({})
     const [socketUrl, setSocketUrl] = useState(WEBSOCKET_MAP_TRACKER_URL);
     const [lastSeenList, setLastSeenList] = useState([])
+    const [submitPressed, setSubmitPressed] = useState([])
+    const [mapCenter, setMapCenter] = useState([])
 
     const { lastMessage, readyState, getWebSocket } = useWebSocket(WEBSOCKET_MAP_TRACKER_URL);
 
@@ -184,6 +186,11 @@ const ScheduleMapView = (props) => {
                             is_last: resTrackerHistories?.data?.length === i+1
                         }
                     })
+
+                    if (temp.length != 0 && temp[0]) {
+                        setMapCenter(temp[0]);
+                    }
+                    
                     setHistories(temp || [])
                 })
             } else {
@@ -241,16 +248,22 @@ const ScheduleMapView = (props) => {
             end_date: null
         })
     }, [form.tracking_type])
+
+    useEffect(() => {
+        if (props.isSubmitPressed == true && submitPressed != true) {
+            setSubmitPressed(true);
+            setTimeout(() => {
+                handleSearch();
+                setSubmitPressed(false);
+            }, 3000);
+        }
+    })
     
     return (
         <div>
-            <Button onClick={handleSearch}>HELLO</Button>
-            <div style={{ fontSize: "22px", fontWeight:"500", paddingLeft: "10px" }}>
-                Map View
-            </div>
             <ToastContainer />
 
-            <div style={{ height: "82vh", width:"500px", marginTop: "24px"}} className={classes.tableWrapper}>
+            <div style={{ height: "675px", width:"auto", marginTop: "24px"}} className={classes.tableWrapper}>
                 {
                     lastSeenList.length && !isLoading ? (
                         <div style={{
@@ -267,7 +280,11 @@ const ScheduleMapView = (props) => {
                     bootstrapURLKeys={{ key: GOOGLE_MAP_API_KEY }}
                     defaultCenter={DEFAULT_MAP.center}
                     defaultZoom={DEFAULT_MAP.zoom}
-                    center={defaultMap.center}
+                    center={
+                        mapCenter ? {
+                            lat: mapCenter.lat,
+                            lng: mapCenter.long
+                        } : DEFAULT_MAP.center}
                     zoom={defaultMap.zoom}
                     onDragEnd={(e) => setDefaultMap({
                         center: {

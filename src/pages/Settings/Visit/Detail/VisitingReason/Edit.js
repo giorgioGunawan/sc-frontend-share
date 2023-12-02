@@ -32,6 +32,7 @@ function EditVisitingReasonPage(props) {
     })
     const { company_id, id } = useParams()
     const [errorToastId, setErrorToastId] = useState(null);
+    const [name, setName] = useState('')
 
     useEffect(() => {
         getDetailVisitingReason()
@@ -65,7 +66,7 @@ function EditVisitingReasonPage(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 id,
-                name: form.name,
+                name: name,
                 include_product: form.includeProduct
             })
         }
@@ -101,7 +102,7 @@ function EditVisitingReasonPage(props) {
                     <Widget title="" disableWidgetMenu>
                         <Grid container spacing={1} className={classes.inputContainer}>
                             <FormControl className={classes.formControl}>
-                                <CustomInput title="Name" handleChange={handleChangeName} value={form.name} />
+                                <CustomInput title="Name" handleChange={(e) => setName(e.target.value)} value={name} />
                             </FormControl>
                         </Grid>
                         <Grid container spacing={1} className={classes.inputContainer}>

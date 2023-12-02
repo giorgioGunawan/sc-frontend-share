@@ -83,7 +83,7 @@ function ScheduleReportPage(props) {
   const columns = [
     {
       name: "full_name",
-      label: "Sales Name",
+      label: <p style={{ textTransform: 'capitalize' }}>Employee</p>,
       options: {
         filter: true,
         sort: true,
@@ -91,7 +91,7 @@ function ScheduleReportPage(props) {
     },
     {
       name: "schedule_number",
-      label: "No of Schedules",
+      label: <p style={{ textTransform: 'capitalize' }}>Number of Schedules</p>,
       options: {
         filter: true,
         sort: true,
@@ -99,7 +99,7 @@ function ScheduleReportPage(props) {
     },
     {
       name: "success",
-      label: "Success",
+      label: <p style={{ textTransform: 'capitalize' }}>Success</p>,
       options: {
         filter: true,
         sort: true,
@@ -107,7 +107,7 @@ function ScheduleReportPage(props) {
     },
     {
       name: "percentage",
-      label: "Success Percentage (%)",
+      label: <p style={{ textTransform: 'capitalize' }}>Success Percentage (%)</p>,
       options: {
         filter: true,
         sort: true,
@@ -115,7 +115,7 @@ function ScheduleReportPage(props) {
     },
     {
       name: "new_client",
-      label: "Clients Added",
+      label: <p style={{ textTransform: 'capitalize' }}>Clients Added</p>,
       options: {
         filter: true,
         sort: true,
@@ -139,7 +139,10 @@ function ScheduleReportPage(props) {
     pagination: true,
     print: false,
     download: true,
-    filter: true,
+    downloadOptions: {
+      filename: 'report.xlsx'
+    },
+    filter: false,
     responsive: "scrollFullHeight",
     fixedHeader: false, elevation: 0,
     rowsPerPageOptions: [5, 10, 20],

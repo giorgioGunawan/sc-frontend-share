@@ -83,18 +83,18 @@ function VisitingReasonPage(props) {
         },
         {
             name: "name",
-            label: "Entity Name",
+            label: <p style={{ textTransform: 'capitalize' }}>Reason Name</p>,
             options: {
                 filter: true,
-                sort: true,
+                sort: false,
             }
         },
         {
             name: "include_product",
-            label: "Include Product",
+            label: <p style={{ textTransform: 'capitalize' }}>Include Product</p>,
             options: {
                 filter: true,
-                sort: true,
+                sort: false,
                 customBodyRender: (value) => <span>{value ? 'Yes' : 'No'}</span>
             }
         },
@@ -110,7 +110,7 @@ function VisitingReasonPage(props) {
         pagination: true,
         print: false,
         download: true,
-        filter: true,
+        filter: false,
         responsive: 'scroll',
         fixedHeader: false, elevation: 0,
         rowsPerPageOptions: [5, 10, 20],

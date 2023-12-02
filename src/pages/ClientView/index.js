@@ -1,22 +1,24 @@
 import React from 'react'
-import Tabs from '../../components/Tabs'
+import { Tabs } from 'antd';
 import Client from './Client'
 import Import from './Import'
 
 const ITEMS = [
     {
-        title: 'Client View',
-        component: <Client />
+        key: '1',
+        label: 'Client View',
+        children: <Client />
     },
     {
-        title: 'Import Client',
-        component: <Import />
+        key: '2',
+        label: 'Import Client',
+        children: <Import />
     },
 ]
 
 const ClientView = () => {
   return (
-    <Tabs items={ITEMS} />
+    <Tabs style={{margin:"10px"}} defaultActiveKey="1" items={ITEMS}/>
   )
 }
 

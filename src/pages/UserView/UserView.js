@@ -16,6 +16,7 @@ import fetchUserView from "../../services/users/UserViewWithFilter";
 import { useUserState } from "../../context/UserContext";
 import CustomInput from "../../components/FormControls/CustomInput";
 import debounce from "lodash.debounce";
+import { Edit } from "@material-ui/icons";
 
 
 function UserViewPage(props) {
@@ -95,7 +96,7 @@ function UserViewPage(props) {
     },
     {
       name: "full_name",
-      label: "Name",
+      label: <p style={{ textTransform: 'capitalize' }}>Name</p>,
       options: {
         filter: true,
         sort: true,
@@ -103,7 +104,7 @@ function UserViewPage(props) {
     },
     {
       name: "email",
-      label: "Email",
+      label: <p style={{ textTransform: 'capitalize' }}>Email</p>,
       options: {
         filter: true,
         sort: true,
@@ -111,13 +112,40 @@ function UserViewPage(props) {
     },
     {
       name: "phone_number",
-      label: "Phone",
+      label: <p style={{ textTransform: 'capitalize' }}>Phone</p>,
       options: {
         filter: true,
         sort: true,
       }
     },
+    {
+      name: "user_id",
+      label: <p style={{ textTransform: 'capitalize' }}>Edit</p>,
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          // console.log("==================>", value, tableMeta, updateValue)
+          return (
+            <>
+              <IconButton
+                  onClick={(e) => {
+                    actionEdit(e, value)
+                  }}
+                >
+                  <Edit style={{fontSize:'18'}}/>
+              </IconButton>
+            </>
+          );
+        }
+      }
+    },
   ];
+
+  const actionEdit = (e, i) => {
+    setSelectedRowIndex(i)
+    history.push("/app/userview/user/" + i + "/edit");
+  }
 
   
   if (userviewData.loading) {
@@ -174,7 +202,6 @@ function UserViewPage(props) {
 
   return (
     <>
-      {/*<PageTitle title="Employees" data={dataSource} />*/}
       {
         isLoading
         ?

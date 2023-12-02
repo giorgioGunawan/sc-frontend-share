@@ -25,6 +25,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
+import fetchBranch from "../../../services/branch/BranchServices";
 import Checkbox from '@material-ui/core/Checkbox';
 
 const positions = [
@@ -58,6 +59,9 @@ function EditAdmin(props) {
   var [notificationsPosition, setNotificationPosition] = useState(2);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0)
   const companyData = useSelector(state => state.company);
+  const branchData = useSelector(state => state.branch);
+
+  console.log('g67', branchData)
 
   //Show notification
   const notify = (message) => toast(message);
@@ -82,15 +86,17 @@ function EditAdmin(props) {
     isActive: false,
     allow_so: false,
     sales_target: 0,
+    branch_name: '',
+    branch_id: '',
   })
 
   const update_id = props.match.params.admin
   useEffect(() => {
+    props.fetchBranch();
+    setDataSource(branchData.data);
     props.fetchCompany();
-    console.log(companyData)
     setDataSource(companyData.company);
     getAdminInfo(update_id)
-
   }, [])
 
   const getAdminInfo = (user_id) => {
@@ -119,7 +125,9 @@ function EditAdmin(props) {
           phone_number: data[0].phone_number,
           companyIDList: data[0].company_id.split(', '),
           company_entity_name: data[0].company_entity_name,
+          branch_name: data[0].branch_name,
           isActive: data[0].isActive,
+          branch_id: data[0].branch_id ? data[0].branch_id.toString() : "0",
           sales_target: data[0].sales_target,
           allow_so: data[0].allow_so
         }))
@@ -130,6 +138,7 @@ function EditAdmin(props) {
   }
 
   const updateAdminInfo = (user_id) => {
+    console.log('g67 branchid', state.branch_id)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -141,6 +150,7 @@ function EditAdmin(props) {
         company_id: state.companyIDList.join(', '),
         isAdmin: true,
         isActive: state.isActive,
+        branch_id: state.branch_id,
         sales_target: state.sales_target,
         allow_so: state.allow_so
       })
@@ -180,9 +190,28 @@ function EditAdmin(props) {
     }
   }
 
+  const branchObjArrayConverter = (original) => {
+    let tmp = [];
+    console.log('g67 original', original)
+    console.log('g67 companyIdlist',state.companyIDList)
+    if (Boolean(original) && state.companyIDList) {
+      if (original.length) {
+        original.forEach(item => {
+          if (state.companyIDList.includes(String(item?.company_id))) {
+            tmp.push(item?.branch_name);
+          }
+        });
+        return tmp;
+      }
+      return [];
+    } else {
+      return [];
+    }
+  };
+
   const companies = objArray2Array(companyData.company)
 
-
+  const branches = branchObjArrayConverter(branchData.company)
 
   const setCompanyIdfromCompanyName = (company_entity_name) => {
     let object = companyData.company.filter(item => item.company_entity_name == company_entity_name)
@@ -194,6 +223,19 @@ function EditAdmin(props) {
       // })
     }
 
+  }
+
+  const setBranchIdfromBranchName = (branch_name) => {
+    let object = branchData.company.filter(item => item.branch_name === branch_name)
+    if (object[0] != null) {
+      setState({
+        ...state,
+        branch_id: object[0].branch_id.toString()
+      })
+
+      console.log('g67state', state)
+      return object[0].branch_id.toString();
+    }
   }
 
   const getCompanyNamefromCompanyID = (companyIDList) => {
@@ -232,6 +274,7 @@ function EditAdmin(props) {
   };
   //input fields event
   const handleChange = (e, field) => {
+    
     if (e.target.name == 'isActive') {
       setState({ ...state, [e.target.name]: e.target.checked });
     } else if (e.target.name == 'allow_so') {
@@ -241,6 +284,13 @@ function EditAdmin(props) {
       setState(prevState => ({
         ...prevState, [field]: value
       }))
+    }
+  }
+
+  const handleBranch = (e,field) => {
+    if (e !== undefined) {
+      const branch_id = setBranchIdfromBranchName(e)
+      setState({ ...state, branch_name: e, branch_id: branch_id })
     }
   }
 
@@ -296,8 +346,6 @@ function EditAdmin(props) {
                 <CustomInput title="Phone Number" value={state.phone_number} handleChange={(e) => handleChange(e, 'phone_number')} />
               </Grid>
               <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
-                {/* <CustomCombobox req={true} addbtn={false} name="Company Name" items={companies} value={state.company_entity_name}
-                  handleChange={(e) => handleChange(e, 'company_entity_name')} /> */}
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-mutiple-checkbox-label">Companies</InputLabel>
                   <Select
@@ -319,6 +367,12 @@ function EditAdmin(props) {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid container spacing={1}>
+              <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
+                <CustomCombobox req={true} addbtn={false} name="Branch Name" items={branches} value={state.branch_name}
+                  handleChange={(e) => handleBranch(e, 'branch_name')} />
+              </Grid>
+            </Grid>
             </Grid>
             <Grid container spacing={1}>
               <Grid item xs={12} sm={6} md={6} lg={6} className={classes.formContainer}>
@@ -474,7 +528,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  fetchCompany: fetchCompany
+  fetchCompany: fetchCompany,
+  fetchBranch: fetchBranch,
 }, dispatch)
 
 export default connect(

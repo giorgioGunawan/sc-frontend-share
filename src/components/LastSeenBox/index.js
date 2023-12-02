@@ -12,7 +12,8 @@ const useStyles = makeStyles(theme => {
             background: 'rgba(217, 217, 217, 0.8)',
             padding: '14px',
             overflowY: 'scroll',
-            minWidth: '300px'
+            minWidth: '300px',
+            borderRadius: '15px',
         },
         table: {
             borderSpacing: '0 1em',
@@ -37,14 +38,14 @@ const LastSeenBox = ({data}) => {
                 <h3>Last Seen At</h3>
                 <table className={classes.table}>
                     {
-                        data.map?.(item => {
+                        data.sort((a, b) => moment(b.lastSeen) - moment(a.lastSeen)).map?.(item => {
                             return (
                                 <tr className={classes.item}>
                                     <td className={classes.name}>
                                         {item.full_name}
                                     </td>
                                     <td>
-                                        {item.lastSeen ? moment(item.lastSeen).format('MMMM Do YYYY, h:mm:ss') : 'Offline'}
+                                        {item.lastSeen ? moment(item.lastSeen).format('MMMM Do YYYY, h:mm:ss a') : 'Offline'}
                                     </td>
                                 </tr>
                             )
