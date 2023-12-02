@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/static/js/main.a7f8ec67.chunk.js",
+    "main.js.map": "/static/js/main.a7f8ec67.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/css/2.f050fc0f.chunk.css": "/static/css/2.f050fc0f.chunk.css",
+    "static/js/2.db63d662.chunk.js": "/static/js/2.db63d662.chunk.js",
+    "static/js/2.db63d662.chunk.js.map": "/static/js/2.db63d662.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.175c7bbd9e1e2872fb6d4e7b987cc8f5.js": "/precache-manifest.175c7bbd9e1e2872fb6d4e7b987cc8f5.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.f050fc0f.chunk.css.map": "/static/css/2.f050fc0f.chunk.css.map",
+    "static/media/example_clientview.csv": "/static/media/example_clientview.68fc9206.csv",
+    "static/media/example_salesview.csv": "/static/media/example_salesview.f3b291b0.csv",
+    "static/media/loading.gif": "/static/media/loading.80a83396.gif",
+    "static/media/logo.png": "/static/media/logo.40a2ca7d.png"
+  }
+}
